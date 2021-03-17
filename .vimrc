@@ -11,6 +11,10 @@ call vundle#begin()
 "call vundle#begin('~/some/path/here')
 
 " let Vundle manage Vundle, required
+Plugin 'Lokaltog/powerline',{'rtp': 'powerline/bindings/vim/'}
+Plugin 'drewtempelmeyer/palenight.vim'
+Plugin 'kyoz/purify', { 'rtp': 'vim' }
+Plugin 'sonph/onehalf', { 'rtp': 'vim' }
 Plugin 'gmarik/Vundle.vim'
 Plugin 'tmhedberg/SimpylFold'
 Plugin 'vim-scripts/indentpython.vim'
@@ -20,7 +24,6 @@ Bundle 'Valloric/YouCompleteMe'
 Plugin 'preservim/nerdtree'
 Plugin 'jistr/vim-nerdtree-tabs'
 Plugin 'tpope/vim-fugitive'
-Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
 Plugin 'dracula/vim', { 'as': 'dracula' }
 Plugin 'frazrepo/vim-rainbow'
 Plugin 'itchyny/lightline.vim'
@@ -44,14 +47,15 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 1
 "let g:nerdtree_tabs_open_on_console_startup=1
-let g:SimpylFold_docstring_preview=1
+"let g:SimpylFold_docstring_preview=1
 let g:rust_clip_command = 'xclip -selection clipboard'
 let g:ycm_autoclose_preview_window_after_completion=1
-let python_highlight_all=1
+let g:ycm_server_keep_logfiles = 1
+let g:ycm_server_log_level = 'debug'
+"let python_highlight_all=1
 let g:NERDTreeDirArrowExpandable = '>'
 let g:NERDTreeDirArrowCollapsible = 'v'
 let NERDTreeIgnore=['\.pyc$', '\~$'] "ignore files in NERDTree
-let g:rainbow_active = 1
 let g:rainbow_active = 1
 let g:rustfmt_autosave = 1 "will enable automatic running of :RustFmt
 let g:rust_clip_command = 'xclip -selection clipboard'
@@ -62,15 +66,18 @@ let g:rainbow_load_separately = [
     \ [ '*.{html,htm}' , [['(', ')'], ['\[', '\]'], ['{', '}'], ['<\a[^>]*>', '</[^>]*>']] ],
     \ ]
 
+abbr _sh #!/bin/bash
+abbr _py #!/bin/python3
+abbr _if if [-z $1];then<CR>echo "> $0 <name><CR>exit 2<CR>fi
+
 let g:rainbow_guifgs = ['RoyalBlue3', 'DarkOrange3', 'DarkOrchid3', 'FireBrick']
 let g:rainbow_ctermfgs = ['lightblue', 'lightgreen', 'yellow', 'red', 'magenta']
-let g:syntastic_python_checkers = ['pylint']
+"let g:syntastic_python_checkers = ['pylint']
 
 map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
 map <C-n> :NERDTreeToggle<CR>
 
 "colorscheme monokai
-colorscheme monokai
 
 set statusline+=%#warningmsg#
 set statusline+=%{SyntasticStatuslineFlag()}
@@ -102,6 +109,9 @@ autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isT
 set foldmethod=indent
 set foldlevel=99
 
+colorscheme onehalfdark
+
+"python lang suport
 au BufNewFile,BufRead *.py
     \set tabstop=4
     \set softtabstop=4
@@ -111,7 +121,8 @@ au BufNewFile,BufRead *.py
     \set autoindent
     \set fileformat=unix
 
-au BufNewFile,BufRead *.c*
+"c lang suport
+au BufNewFile,BufRead *.c
     \set tabstop=8
     \set softtabstop=8
     \set shiftwidth=8
@@ -119,6 +130,7 @@ au BufNewFile,BufRead *.c*
     \set expandtab
     \set autoindent
 
+"rust lang suport
 au BufNewFile,BufRead *.rs
     \set tabstop=4
     \set softtabstop=4
@@ -128,8 +140,14 @@ au BufNewFile,BufRead *.rs
     \set autoindent
     \let g:nerdtree_tabs_open_on_console_startup=1
 
+"some web lang suport
 au BufNewFile,BufRead *.js, *.html, *.css
     \set tabstop=2
     \set softtabstop=2
     \set shiftwidth=2
 
+"rust suport
+au FileType rust nmap <silent> <C-]> <Plug>(rust-def)
+au FileType rust nmap <silent> <C-w><C-]> <Plug>(rust-def-vertical)
+au FileType rust nmap <silent> <C-w>} <Plug>(rust-def-split)
+au FileType rust nmap <silent> <C-k> <Plug>(rust-doc)
